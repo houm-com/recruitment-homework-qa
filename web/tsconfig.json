@@ -18,8 +18,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src", "./vitest.setup.ts"],
+  "include": ["src", "src/utils/test/vitest.setup.ts", "cypress/e2e/App.spec.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
