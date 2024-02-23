@@ -1,8 +1,3 @@
-
 export default function App() {
-  return (
-    <>
-      hello world
-    </>
-  )
+  return <>hello world</>;
 }
