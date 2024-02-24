@@ -1,0 +1,30 @@
+# Base for testing and development images
+FROM python:3.10-slim AS base
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH=/app:${PYTHONPATH}
+RUN apt-get update && \
+    apt-get install -y \
+        gcc libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+
+FROM base AS builder-dev
+COPY requirements.txt requirements-dev.txt /tmp/
+RUN python -m venv /opt/venv && \
+    pip install -r /tmp/requirements-dev.txt
+
+FROM base AS python-base
+COPY --from=builder-dev /opt/venv /opt/venv
+WORKDIR /app
+
+FROM python-base AS dev
+COPY .docker/dev /usr/local/bin/
+COPY database/ database/
+
+RUN chmod +x /usr/local/bin/dev
+EXPOSE 8000

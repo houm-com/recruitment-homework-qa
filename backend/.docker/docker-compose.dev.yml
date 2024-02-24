@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  api:
+    container_name: visits-app
+    build: &build
+      context: ../
+      dockerfile: .docker/dockerfile.dev
+      target: dev
+    environment: &env
+      - SQLITE_DB_FILENAME
+      - DATABASE_URL
+      - PREFIX_URL
+    ports:
+      - "8000:8000"
+    volumes: &volumes
+      - ../alembic:/app/alembic
+      - ../alembic.ini:/app/alembic.ini
+      - ../src:/app/src
+      - ../database/:/app/database
+      - ../:/app
+      - ../tests:/app/tests
+      - ../pyproject.toml:/app/pyproject.toml
+      - ../requirements.txt:/app/requirements.txt
+      - ../requirements-dev.txt:/app/requirements-dev.txt
+      - /app/.venv/
+      - /app/.vscode/
+      - /app/.git/
+    restart: unless-stopped
+    command: []
