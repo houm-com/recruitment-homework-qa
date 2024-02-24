@@ -1,6 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
+from src.api.exceptions import (
+    ResolutionCommentNotEditableError,
+    ResolutionCommentRequiredError,
+    VisitNotEditableError,
+)
 from src.api.schemas.visits import (
     Visits,
     VisitsCreate,
@@ -54,10 +59,7 @@ def validate_resolution_comment_on_finish(visit_update: VisitsUpdate | VisitsPar
     if visit_update.status in [
         VisitsStatus.COMPLETED.value,
     ] and not visit_update.check_fields_being_updated(include={"status", "resolution_comment"}):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="resolution_comment is required when status is COMPLETED",
-        )
+        raise ResolutionCommentRequiredError
 
 
 def validate_visit_is_editable(
@@ -74,14 +76,8 @@ def validate_visit_is_editable(
     ):
         return
     if visit_update.check_fields_being_updated(include={"resolution_comment"}):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="resolution_comment is not editable in current status",
-        )
-    raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail="Visit is not editable in current status",
-    )
+        raise ResolutionCommentNotEditableError
+    raise VisitNotEditableError
 
 
 def validate_on_update(
