@@ -12,7 +12,7 @@
         "houmer_name": "Jane Smith",
         "visitor_name": "Visitor 2",
         "scheduled_at": "2024-02-25 11:00:00",
-        "status": "DELAY",
+        "status": "DELAYED",
         "resolution_comment": null
     },
     {
@@ -44,7 +44,7 @@
         "houmer_name": "David Miller",
         "visitor_name": "Visitor 6",
         "scheduled_at": "2024-02-27 13:15:00",
-        "status": "DELAY",
+        "status": "DELAYED",
         "resolution_comment": null
     },
     {
