@@ -2,12 +2,14 @@
 
 Visits Backup App
 
-# Before running the project
+# Before running the project (optional)
+
 ## Pre-requisites
-Make sure you have the following installed:
-- Docker and docker-compose. You can use install [Docker Desktop](https://docs.docker.com/get-docker/) for an easy install.
-- VS Code is what we usually use, but it is not restricted nor mandatory.
-- Python 3.10
+You need to have installed the following software in your machine:
+* Docker (we use docker compose to manage the backend and database containers) [Docker installation](https://docs.docker.com/get-docker/)
+
+## Environment variables
+Create a copy of the `.env.template` file and name it `.env`.
 
 ## Run project locally
 
