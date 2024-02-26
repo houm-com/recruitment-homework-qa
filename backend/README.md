@@ -9,9 +9,6 @@ Make sure you have the following installed:
 - VS Code is what we usually use, but it is not restricted nor mandatory.
 - Python 3.10
 
-## Environment variables
-Create a copy of the `.env.template` file and name it `.env`.
-
 ## Run project locally
 
 Run the following instructions to create the app container and database and run the service to start playing with the API.
