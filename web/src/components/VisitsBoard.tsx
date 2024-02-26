@@ -8,7 +8,7 @@ export default function VisitsBoard() {
   if (visitStatus.status === "pending") return <div>Loading...</div>;
   if (visitStatus.status === "error") return <div>{visitStatus.error.message}</div>;
   return (
-    <div className="flex h-full w-full gap-3 overflow-auto p-12">
+    <div className="flex h-full w-full gap-3">
       {visitStatus.data.map((status) => (
         <VisitsBoardColumn
           key={status}
