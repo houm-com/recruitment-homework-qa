@@ -6,7 +6,12 @@ from src.settings import settings
 
 app = FastAPI(docs_url="/docs", redoc_url=None)
 
-origins = ["*"]
+
+origins = [
+    "http://localhost",
+    "http://localhost:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -20,6 +25,13 @@ base_router = APIRouter(prefix=settings.PREFIX_URL)
 base_router.include_router(visits_router)
 app.include_router(base_router)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
