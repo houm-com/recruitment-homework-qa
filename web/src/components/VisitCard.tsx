@@ -11,9 +11,11 @@ export default function VisitCard({ visit }: { visit: Visit }) {
       <h4 className="text-xl mb-1">{visit.address}</h4>
       <p className="text-sm mb-2">
         {iso2date(visit.scheduled_at)}{" "}
-        {isDelayed(visit.scheduled_at) && (
-          <span className="italic text-red-700 dark:text-red-300">(Delayed)</span>
-        )}
+        {isDelayed(visit.scheduled_at) &&
+          visit.status !== "CANCELED" &&
+          visit.status !== "COMPLETED" && (
+            <span className="italic text-red-700 dark:text-red-300">(Delayed)</span>
+          )}
       </p>
       <p>Visitor: {visit.visitor_name}</p>
       <p>
