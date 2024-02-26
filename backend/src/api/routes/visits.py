@@ -1,11 +1,6 @@
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
-from src.api.exceptions import (
-    ResolutionCommentNotEditableError,
-    ResolutionCommentRequiredError,
-    VisitNotEditableError,
-)
 from src.api.schemas.visits import (
     Visits,
     VisitsCreate,
@@ -14,6 +9,7 @@ from src.api.schemas.visits import (
     VisitsUpdate,
 )
 from src.api.service import VisitsService
+from src.api.validations import UpdateValidator
 from src.orm.config import get_db_session
 
 router = APIRouter(
@@ -55,37 +51,14 @@ def get_visit(visit_id: int, session: Session = Depends(get_db_session)):
     return service.get_visit(visit_id=visit_id)
 
 
-def validate_resolution_comment_on_finish(visit_update: VisitsUpdate | VisitsPartialUpdate):
-    if visit_update.status in [
-        VisitsStatus.COMPLETED.value,
-    ] and not visit_update.check_fields_being_updated(include={"status", "resolution_comment"}):
-        raise ResolutionCommentRequiredError
-
-
-def validate_visit_is_editable(
-    visit_update: VisitsUpdate | VisitsPartialUpdate,
-    current_visit_state: Visits,
-):
-    current_status = current_visit_state.status
-    target_status = visit_update.status
-    allowed_statuses = [VisitsStatus.PENDING.value, VisitsStatus.IN_PROGRESS.value]
-    if (
-        current_status in allowed_statuses
-        and (target_status is None or target_status in allowed_statuses)
-        and not visit_update.check_fields_being_updated(include={"resolution_comment"})
-    ):
-        return
-    if visit_update.check_fields_being_updated(include={"resolution_comment"}):
-        raise ResolutionCommentNotEditableError
-    raise VisitNotEditableError(visit_id=current_visit_state.id)
-
-
 def validate_on_update(
     visit_update: VisitsUpdate | VisitsPartialUpdate,
     current_visit_state: Visits,
 ):
-    validate_resolution_comment_on_finish(visit_update=visit_update)
-    validate_visit_is_editable(visit_update=visit_update, current_visit_state=current_visit_state)
+    UpdateValidator(
+        current_visit_state=current_visit_state,
+        target_state=visit_update,
+    ).validate()
 
 
 @router.put("/{visit_id}", response_model=Visits)

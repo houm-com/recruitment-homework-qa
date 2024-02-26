@@ -8,8 +8,9 @@ class VisitsStatus(Enum):
     """Possible tatuses for the visits."""
 
     PENDING = "PENDING"
-    DELAY = "DELAY"
+    DELAYED = "DELAYED"
     IN_PROGRESS = "IN_PROGRESS"
+    CANCELED = "CANCELED"
     COMPLETED = "COMPLETED"
 
 
@@ -52,11 +53,26 @@ class VisitsUpdate(BaseModel):
     status: str | None
     resolution_comment: str | None
 
-    def check_fields_being_updated(self, include: list[str]):
+    def strict_check_fields_being_updated(
+        self,
+        include: list[str] = None,
+        exclude: list[str] = None,
+    ):
         """Check if all fields except the ones in exclude are being updated."""
-        if not include:
-            return all(self.dict().values())
-        return all(self.dict(include=include).values())
+        include = include or []
+        exclude = exclude or []
+        if include and exclude:
+            msg = "Cannot use both include and exclude at the same time."
+            raise ValueError(msg)
+        if include:
+            return all(self.dict(include=include).values()) and not any(
+                self.dict(exclude=include).values(),
+            )
+        if exclude:
+            return all(self.dict(exclude=exclude).values()) and not any(
+                self.dict(include=exclude).values(),
+            )
+        return all(self.dict().values())
 
 
 class VisitsPartialUpdate(VisitsUpdate):
