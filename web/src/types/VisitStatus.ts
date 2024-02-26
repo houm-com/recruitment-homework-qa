@@ -2,10 +2,10 @@ import z from "zod";
 
 export const visitStatusSchema = z.enum([
   "PENDING",
-  "DELAY",
+  "DELAYED",
   "IN_PROGRESS",
-  "COMPLETED",
   "CANCELED",
+  "COMPLETED",
 ]);
 
 export type VisitStatus = z.infer<typeof visitStatusSchema>;
