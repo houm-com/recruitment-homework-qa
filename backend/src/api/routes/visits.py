@@ -77,7 +77,7 @@ def validate_visit_is_editable(
         return
     if visit_update.check_fields_being_updated(include={"resolution_comment"}):
         raise ResolutionCommentNotEditableError
-    raise VisitNotEditableError
+    raise VisitNotEditableError(visit_id=current_visit_state.id)
 
 
 def validate_on_update(
