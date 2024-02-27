@@ -19,8 +19,8 @@ async function baseAPi(url: string, options: RequestInit) {
 
 export const api = {
   get: (url: string) => baseAPi(url, { method: "GET" }),
-  post: (url: string, body: RequestInit["body"]) =>
+  post: <T>(url: string, body: T) =>
     baseAPi(url, { method: "POST", ...(body && { body: JSON.stringify(body) }) }),
-  patch: (url: string, body: RequestInit["body"]) =>
+  patch: <T>(url: string, body: T) =>
     baseAPi(url, { method: "PATCH", ...(body && { body: JSON.stringify(body) }) }),
 };

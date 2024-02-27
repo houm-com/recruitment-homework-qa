@@ -60,5 +60,5 @@ export function ModalBody({ children }: { children: React.ReactNode }) {
 }
 
 export function ModalActions({ children }: { children: React.ReactNode }) {
-  return <div className="mt-5 sm:mt-4 flex justify-end gap-2">{children}</div>;
+  return <div className="mt-6 flex justify-end gap-2">{children}</div>;
 }
