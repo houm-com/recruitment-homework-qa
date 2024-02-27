@@ -60,12 +60,10 @@ class UpdateValidator:
             )
 
     def validate_delayed(self) -> None:
-        editable_fields = {"status"}
-        if not self.target_state.strict_check_fields_being_updated(include=editable_fields):
-            raise OnlyFieldsEditableInSpecificStatusError(
-                fields=editable_fields,
-                status=VisitsStatus.DELAYED.value,
-            )
+        self._validate_editable()
+        if self.target_state.resolution_comment:
+            raise ResolutionCommentNotEditableError
+        self.target_state.resolution_comment = None
 
     def validate_canceled(self) -> None:
         editable_fields = {"status", "resolution_comment"}
