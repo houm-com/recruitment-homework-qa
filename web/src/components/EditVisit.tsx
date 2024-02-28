@@ -22,7 +22,7 @@ const editSchema = z
   .refine(
     (data) => {
       if (data.status === "COMPLETED" || data.status === "CANCELED") {
-        return data.resolution_comment !== undefined;
+        return !!data.resolution_comment;
       }
       return true;
     },
