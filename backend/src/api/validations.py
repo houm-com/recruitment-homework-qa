@@ -32,7 +32,7 @@ class UpdateValidator:
         if self.target_state.status == VisitsStatus.COMPLETED.value:
             return self.validate_completed()
         if self.target_state.status == VisitsStatus.DELAYED.value:
-            return self.validate_in_progress()
+            return self.validate_delayed()
         if self.target_state.status == VisitsStatus.CANCELED.value:
             return self.validate_canceled()
         raise NotImplementedError
@@ -90,3 +90,13 @@ class UpdateValidator:
 
         if status not in available_statuses:
             raise InvalidStatusError(status=status, available_statuses=available_statuses)
+
+
+def validate_on_update(
+    visit_update: VisitsUpdate | VisitsPartialUpdate,
+    current_visit_state: Visits,
+):
+    UpdateValidator(
+        current_visit_state=current_visit_state,
+        target_state=visit_update,
+    ).validate()

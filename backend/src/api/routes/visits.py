@@ -6,10 +6,9 @@ from src.api.schemas.visits import (
     VisitsCreate,
     VisitsPartialUpdate,
     VisitsStatus,
-    VisitsUpdate,
 )
 from src.api.service import VisitsService
-from src.api.validations import UpdateValidator
+from src.api.validations import validate_on_update
 from src.orm.config import get_db_session
 
 router = APIRouter(
@@ -48,29 +47,6 @@ def get_visits(session: Session = Depends(get_db_session)):
 def get_visit(visit_id: int, session: Session = Depends(get_db_session)):
     """Get a list by its id."""
     service = VisitsService(session=session)
-    return service.get_visit(visit_id=visit_id)
-
-
-def validate_on_update(
-    visit_update: VisitsUpdate | VisitsPartialUpdate,
-    current_visit_state: Visits,
-):
-    UpdateValidator(
-        current_visit_state=current_visit_state,
-        target_state=visit_update,
-    ).validate()
-
-
-@router.put("/{visit_id}", response_model=Visits)
-def update_visit(
-    visit_id: int,
-    visit_update: VisitsUpdate,
-    session: Session = Depends(get_db_session),
-):
-    service = VisitsService(session=session)
-    current_visit_state = service.get_visit(visit_id=visit_id)
-    validate_on_update(visit_update=visit_update, current_visit_state=current_visit_state)
-    service.update_visit(visit_id=visit_id, visit=visit_update)
     return service.get_visit(visit_id=visit_id)
 
 
