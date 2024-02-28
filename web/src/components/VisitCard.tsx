@@ -33,9 +33,11 @@ export default function VisitCard({ visit }: { visit: Visit }) {
           <p className="italic">{visit.resolution_comment}</p>
         </>
       )}
-      <div className="invisible group-hover:visible mt-2">
-        <EditVisit visit={visit} />
-      </div>
+      {visit.status !== "COMPLETED" && visit.status !== "CANCELED" && (
+        <div className="invisible group-hover:visible mt-2">
+          <EditVisit visit={visit} />
+        </div>
+      )}
     </div>
   );
 }

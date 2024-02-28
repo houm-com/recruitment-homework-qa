@@ -32,7 +32,7 @@ class UpdateValidator:
         if self.target_state.status == VisitsStatus.COMPLETED.value:
             return self.validate_completed()
         if self.target_state.status == VisitsStatus.DELAYED.value:
-            return self.validate_delayed()
+            return self.validate_in_progress()
         if self.target_state.status == VisitsStatus.CANCELED.value:
             return self.validate_canceled()
         raise NotImplementedError
@@ -79,6 +79,7 @@ class UpdateValidator:
         fully_enabled_edit_statuses = [
             VisitsStatus.PENDING.value,
             VisitsStatus.IN_PROGRESS.value,
+            VisitsStatus.DELAYED.value,
         ]
         if self.target_state.status in fully_enabled_edit_statuses:
             return

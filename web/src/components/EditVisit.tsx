@@ -50,7 +50,7 @@ export default function EditVisit({ visit }: { visit: Visit }) {
     resolver: zodResolver(editSchema),
   });
 
-  const showComment = watch("status") === "COMPLETED" || watch("status") === "CANCELED";
+  const isFinishState = watch("status") === "COMPLETED" || watch("status") === "CANCELED";
   const { mutate, status: submitStatus, error: submitError } = useEditVisit({ id: visit.id });
   const handleClose = () => {
     if (submitStatus === "pending") {
@@ -60,7 +60,10 @@ export default function EditVisit({ visit }: { visit: Visit }) {
     setOpen(false);
   };
   const onSubmit = (data: CreateVisitForm) => {
-    mutate(data, {
+    const payload = isFinishState
+      ? { status: data.status, resolution_comment: data.resolution_comment }
+      : data;
+    mutate(payload, {
       onSuccess: () => {
         handleClose();
       },
@@ -81,21 +84,26 @@ export default function EditVisit({ visit }: { visit: Visit }) {
             <Input
               label="Address"
               {...register("address")}
-              disabled={submitStatus === "pending"}
+              disabled={submitStatus === "pending" || isFinishState}
               error={errors.address?.message && `${errors.address.message}`}
             />
             <Input
               label="Visitor name"
               {...register("visitor_name")}
-              disabled={submitStatus === "pending"}
+              disabled={submitStatus === "pending" || isFinishState}
               error={errors.visitor_name?.message && `${errors.visitor_name.message}`}
             />
-            <Input label="Houmer name" {...register("houmer_name")} />
+            <Input
+              label="Houmer name"
+              {...register("houmer_name")}
+              disabled={submitStatus === "pending" || isFinishState}
+              error={errors.houmer_name?.message && `${errors.houmer_name.message}`}
+            />
             <Input
               label="Scheduled time"
               {...register("scheduled_at")}
               type="datetime-local"
-              disabled={submitStatus === "pending"}
+              disabled={submitStatus === "pending" || isFinishState}
               error={errors.scheduled_at?.message && `${errors.scheduled_at.message}`}
             />
             <Select
@@ -111,7 +119,7 @@ export default function EditVisit({ visit }: { visit: Visit }) {
                 { label: "Canceled", value: "CANCELED" },
               ]}
             />
-            {showComment && (
+            {isFinishState && (
               <Input
                 label="Resolution comment"
                 {...register("resolution_comment")}
