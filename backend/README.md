@@ -8,9 +8,6 @@ Visits Backup App
 You need to have installed the following software in your machine:
 * Docker (we use docker compose to manage the backend and database containers) [Docker installation](https://docs.docker.com/get-docker/)
 
-## Environment variables
-Create a copy of the `.env.template` file and name it `.env`.
-
 ## Run project locally
 
 Run the following instructions to create the app container and database and run the service to start playing with the API.
